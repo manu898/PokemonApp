@@ -37,7 +37,7 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         realmManager.favourites.forEach { poke in
             listaPreferiti.append(poke.name)
         }
-        print("lista preferiti iniziale = \(listaPreferiti)")
+        print("lista preferiti iniziale = \(listaPreferiti)") // da rimuovere questa lista preferiti
         
         self.delegate = self
     }

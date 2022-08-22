@@ -42,47 +42,31 @@ class Preferiti: UIViewController{
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print("button list prima dell'operazione = \(buttonList)")
         if let realmManager = realmManager {
-            let rimossiCount = realmManager.changeInFavorite["rimossi"]?.count // test
-            let aggiuntiCount = realmManager.changeInFavorite["aggiunti"]?.count // test
-            print("rimosssi = \(rimossiCount!) e aggiunti = \(aggiuntiCount!)") // test
-            if realmManager.changeInFavorite["rimossi"]?.count == 0 && realmManager.changeInFavorite["aggiunti"]?.count != 0 {
-                realmManager.changeInFavorite["aggiunti"]?.forEach { poke in
-                    if !buttonList.contains(where: {$0.0.title == poke}) {
-//                    if !listaPreferiti.contains(where: {$0 == poke}) {
-                        print("count rimossi = 0 e chiamo ")
-                        let imageURL = APICaller.shared.getPokemonImageURL(name: poke)
-                        let imageView = APICaller.shared.getPokemonImage(url: imageURL)
-                        print("realizzo il bottone per \(poke)")
-                        let button = PokemonButton(title: poke, imageView: imageView)
-                        let btn = button.button
-                        let numOfButton = buttonList.count
-                        btn.tag = numOfButton + 200
-                        buttonList.append((button,btn.tag))
-                        btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
-                        stackView.addArrangedSubview(btn)
-                        print("button list dopo dell'operazione = \(buttonList)")
-                    }
+            let newFavPokemon = realmManager.newFavPokemon
+            if newFavPokemon != "" {
+                if !buttonList.contains(where: {$0.0.title == newFavPokemon}) {
+                    realmManager.newFavPokemon = ""
+                    let imageURL = APICaller.shared.getPokemonImageURL(name: newFavPokemon)
+                    let imageView = APICaller.shared.getPokemonImage(url: imageURL)
+                    print("realizzo il bottone per \(newFavPokemon)")
+                    let button = PokemonButton(title: newFavPokemon, imageView: imageView)
+                    let btn = button.button
+                    let numOfButton = buttonList.count
+                    btn.tag = numOfButton + 200
+                    buttonList.append((button,btn.tag))
+                    btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
+                    stackView.addArrangedSubview(btn)
+                    print("button list dopo dell'operazione = \(buttonList)")
+                    
                 }
-            } else if realmManager.changeInFavorite["rimossi"]?.count == 0 && realmManager.changeInFavorite["aggiunti"]?.count == 0 {
-                print("non eseguo un cazzo")
-            } else {
-                print("qualche pokemon è stato rimosso dai preferiti")
-                //print("buttonList dentro viewWillAppear = \(buttonList)")
-                
-//                realmManager.changeInFavorite["rimossi"]?.forEach { poke in
-//                    print("\(poke) è il pokemon da rimuovere")
-//                    removeSubview(pokemonName: poke)
-//                }
-                
+            }
+            if realmManager.pokemonDeletedFromFavs == true {
                 removeAllSubviews(sV: stackView)
                 setup()
+                realmManager.pokemonDeletedFromFavs = false
             }
-            realmManager.changeInFavorite["aggiunti"] = []
-            realmManager.changeInFavorite["rimossi"] = []
         }
-        
     }
     
     func removeAllSubviews(sV: UIStackView){
@@ -108,29 +92,24 @@ class Preferiti: UIViewController{
     private func setup() {
         if let realmManager = realmManager {
             for (n,poke) in realmManager.favourites.enumerated(){
+                //print("controllo se posso aggiungere \(poke.name) e n = \(n)")
                 if !buttonList.contains(where: {$0.0.title == poke.name}) {
-//                if !listaPreferiti.contains(where: {$0 == poke.name}) {
+                    //print("button list non contiene \(poke.name) e n = \(n)")
                     let imageURL = APICaller.shared.getPokemonImageURL(name: poke.name)
                     let imageView = APICaller.shared.getPokemonImage(url: imageURL)
                     let button = PokemonButton(title: poke.name, imageView: imageView)
                     let btn = button.button
                     btn.tag = n+200
+                    print("tag \(btn.tag) per \(poke.name)")
                     buttonList.append((button,btn.tag))
                     btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
                     stackView.addArrangedSubview(btn)
+                } else {
+                    //print("button list contiene \(poke.name) e n = \(n)")
                 }
             }
         }
-        
         print("sto in setup e buttonListPreriti = \(buttonList)")
-    }
-    
-    private func setupViews() {
-        scrollView.backgroundColor = .white
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
-        contentView.addSubview(stackView)
-        setup()
     }
     
     @objc
@@ -150,6 +129,14 @@ class Preferiti: UIViewController{
         controller.stats = stats
         controller.abilities = abilities
         present(controller, animated: true, completion: nil)
+    }
+    
+    private func setupViews() {
+        scrollView.backgroundColor = .white
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(stackView)
+        setup()
     }
     
     private func setupLayout() {

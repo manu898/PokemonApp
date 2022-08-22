@@ -12,7 +12,8 @@ class RealmManager: ObservableObject {
     
     private(set) var localRealm: Realm?
     @Published private(set) var favourites: [FavouritePokemon] = []
-    @Published var changeInFavorite: [String:[String]] = ["aggiunti":[],"rimossi":[]]
+    @Published var newFavPokemon: String = ""
+    @Published var pokemonDeletedFromFavs: Bool = false
     
     init(){
         openRealm()
@@ -50,11 +51,12 @@ class RealmManager: ObservableObject {
     
     func getFavourites(){
         if let localRealm = localRealm {
-            let allFavourites = localRealm.objects(FavouritePokemon.self).sorted(byKeyPath: "name")
+            let allFavourites = localRealm.objects(FavouritePokemon.self) // prende la lista dei preferiti ma la riordina alfabeticamente 
             favourites = []
             allFavourites.forEach { favs in
                 favourites.append(favs)
             }
+            favourites = favourites.reversed()
         }
     }
     

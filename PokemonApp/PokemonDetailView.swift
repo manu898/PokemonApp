@@ -56,15 +56,14 @@ class PokemonDetailView: UIViewController {
                 if realmManager.favourites.contains(where: {$0.name == pokemonName}){
                     let foo = realmManager.favourites.first(where: {$0.name == pokemonName})
                     realmManager.deletePokemonFromFavourites(id: foo!.id)
-                    realmManager.changeInFavorite["rimossi"]?.append(pokemonName)
-                    print(realmManager.changeInFavorite)
+                    realmManager.pokemonDeletedFromFavs = true
                     print("Ho rimosso \(pokemonName) dai preferiti")
                     
                     var listaPreriti = [String]()
                     realmManager.favourites.forEach { poke in
                         listaPreriti.append(poke.name)
                     }
-                    print("lista preferiti dopo la rimozione di \(pokemonName) è \(listaPreriti)")
+                    print("lista preferiti dopo la rimozione di \(pokemonName) è \(listaPreriti)") // lista preferiti di test
                     
                 } else {
                     print("\(pokemonName) è già stato rimosso dai preferiti")
@@ -83,8 +82,8 @@ class PokemonDetailView: UIViewController {
                     print("\(pokemonName) è stato già aggiunto ai preferiti")
                 }else {
                     realmManager.addPokemonToFavourites(name: pokemonName)
-                    realmManager.changeInFavorite["aggiunti"]?.append(pokemonName)
-                    print(realmManager.changeInFavorite)
+                    realmManager.newFavPokemon = pokemonName
+                    print(realmManager.newFavPokemon)
                 }
             }
         }
