@@ -28,7 +28,7 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         pokemonList.preferiti = preferiti
         let pokemon = generateNavController(vc: pokemonList, title: "Pokemon")
         let preferiti = generateNavController(vc: favoriteList, title: "Preferiti")
-        pokemon.tabBarItem.image = UIImage(systemName: "house")
+        pokemon.tabBarItem.image = UIImage(systemName: "magnifyingglass")
         preferiti.tabBarItem.image = UIImage(systemName: "star.fill")
         tabBar.tintColor = .label
         UINavigationBar.appearance().prefersLargeTitles = true

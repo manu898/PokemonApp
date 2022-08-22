@@ -42,22 +42,28 @@ class Preferiti: UIViewController{
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        print("button list prima dell'operazione = \(buttonList)")
         if let realmManager = realmManager {
-            let rimossiCount = realmManager.changeInFavorite["rimossi"]?.count
-            let aggiuntiCount = realmManager.changeInFavorite["aggiunti"]?.count
-            print("rimosssi = \(rimossiCount!) e aggiunti = \(aggiuntiCount!)")
+            let rimossiCount = realmManager.changeInFavorite["rimossi"]?.count // test
+            let aggiuntiCount = realmManager.changeInFavorite["aggiunti"]?.count // test
+            print("rimosssi = \(rimossiCount!) e aggiunti = \(aggiuntiCount!)") // test
             if realmManager.changeInFavorite["rimossi"]?.count == 0 && realmManager.changeInFavorite["aggiunti"]?.count != 0 {
                 realmManager.changeInFavorite["aggiunti"]?.forEach { poke in
-                    print("count = 0 e chiamo ")
-                    let imageURL = APICaller.shared.getPokemonImageURL(name: poke)
-                    let imageView = APICaller.shared.getPokemonImage(url: imageURL)
-                    let button = PokemonButton(title: poke, imageView: imageView)
-                    let btn = button.button
-                    let numOfButton = buttonList.count
-                    btn.tag = numOfButton + 200 // 199 prima ma crea problemi
-                    buttonList.append((button,btn.tag))
-                    btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
-                    stackView.addArrangedSubview(btn)
+                    if !buttonList.contains(where: {$0.0.title == poke}) {
+//                    if !listaPreferiti.contains(where: {$0 == poke}) {
+                        print("count rimossi = 0 e chiamo ")
+                        let imageURL = APICaller.shared.getPokemonImageURL(name: poke)
+                        let imageView = APICaller.shared.getPokemonImage(url: imageURL)
+                        print("realizzo il bottone per \(poke)")
+                        let button = PokemonButton(title: poke, imageView: imageView)
+                        let btn = button.button
+                        let numOfButton = buttonList.count
+                        btn.tag = numOfButton + 200
+                        buttonList.append((button,btn.tag))
+                        btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
+                        stackView.addArrangedSubview(btn)
+                        print("button list dopo dell'operazione = \(buttonList)")
+                    }
                 }
             } else if realmManager.changeInFavorite["rimossi"]?.count == 0 && realmManager.changeInFavorite["aggiunti"]?.count == 0 {
                 print("non eseguo un cazzo")
@@ -102,17 +108,21 @@ class Preferiti: UIViewController{
     private func setup() {
         if let realmManager = realmManager {
             for (n,poke) in realmManager.favourites.enumerated(){
-                let imageURL = APICaller.shared.getPokemonImageURL(name: poke.name)
-                let imageView = APICaller.shared.getPokemonImage(url: imageURL)
-                let button = PokemonButton(title: poke.name, imageView: imageView)
-                let btn = button.button
-                btn.tag = n+200 // random number diverso da quello già dato
-                buttonList.append((button,btn.tag))
-                btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
-                stackView.addArrangedSubview(btn)
+                if !buttonList.contains(where: {$0.0.title == poke.name}) {
+//                if !listaPreferiti.contains(where: {$0 == poke.name}) {
+                    let imageURL = APICaller.shared.getPokemonImageURL(name: poke.name)
+                    let imageView = APICaller.shared.getPokemonImage(url: imageURL)
+                    let button = PokemonButton(title: poke.name, imageView: imageView)
+                    let btn = button.button
+                    btn.tag = n+200
+                    buttonList.append((button,btn.tag))
+                    btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
+                    stackView.addArrangedSubview(btn)
+                }
             }
         }
-        print("buttonListPreriti = \(buttonList)")
+        
+        print("sto in setup e buttonListPreriti = \(buttonList)")
     }
     
     private func setupViews() {

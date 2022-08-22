@@ -90,10 +90,7 @@ class APICaller{
                 let statName = stats["stat"]["name"].stringValue
                 let statValue = stats["base_stat"].stringValue
                 statsDict.append(Stat(name: statName, value: statValue))
-                print("StatName: \(statName) = \(statValue) ")
-                print("statsDict = \(statsDict)")
             }
-            print("statsDict = \(statsDict)")
             return statsDict
         }
         return []
