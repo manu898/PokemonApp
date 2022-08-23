@@ -56,7 +56,7 @@ class PokemonDetailView: UIViewController {
                 if realmManager.favourites.contains(where: {$0.name == pokemonName}){
                     let foo = realmManager.favourites.first(where: {$0.name == pokemonName})
                     realmManager.deletePokemonFromFavourites(id: foo!.id)
-                    realmManager.pokemonDeletedFromFavs = true
+                    realmManager.pokemonDeletedFromFavs = pokemonName
                     print("Ho rimosso \(pokemonName) dai preferiti")
                     
                     var listaPreriti = [String]()

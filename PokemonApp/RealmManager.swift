@@ -13,7 +13,8 @@ class RealmManager: ObservableObject {
     private(set) var localRealm: Realm?
     @Published private(set) var favourites: [FavouritePokemon] = []
     @Published var newFavPokemon: String = ""
-    @Published var pokemonDeletedFromFavs: Bool = false
+//    @Published var pokemonDeletedFromFavs: Bool = false
+    @Published var pokemonDeletedFromFavs: String = ""
     
     init(){
         openRealm()

@@ -12,6 +12,7 @@ class Preferiti: UIViewController{
     
     var realmManager: RealmManager?
     var buttonList: [(PokemonButton,Int)] = []
+    var numOfDeletedButton: Int = 0
     
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -41,6 +42,34 @@ class Preferiti: UIViewController{
         setupLayout()
     }
     
+//    override func viewWillAppear(_ animated: Bool) {
+//        if let realmManager = realmManager {
+//            let newFavPokemon = realmManager.newFavPokemon
+//            if newFavPokemon != "" {
+//                if !buttonList.contains(where: {$0.0.title == newFavPokemon}) {
+//                    realmManager.newFavPokemon = ""
+//                    let imageURL = APICaller.shared.getPokemonImageURL(name: newFavPokemon)
+//                    let imageView = APICaller.shared.getPokemonImage(url: imageURL)
+//                    print("realizzo il bottone per \(newFavPokemon)")
+//                    let button = PokemonButton(title: newFavPokemon, imageView: imageView)
+//                    let btn = button.button
+//                    let numOfButton = buttonList.count
+//                    btn.tag = numOfButton + 200
+//                    buttonList.append((button,btn.tag))
+//                    btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
+//                    stackView.addArrangedSubview(btn)
+//                    print("button list dopo dell'operazione = \(buttonList)")
+//
+//                }
+//            }
+//            if realmManager.pokemonDeletedFromFavs == true {
+//                removeAllSubviews(sV: stackView)
+//                setup()
+//                realmManager.pokemonDeletedFromFavs = false
+//            }
+//        }
+//    }
+    
     override func viewWillAppear(_ animated: Bool) {
         if let realmManager = realmManager {
             let newFavPokemon = realmManager.newFavPokemon
@@ -61,10 +90,9 @@ class Preferiti: UIViewController{
                     
                 }
             }
-            if realmManager.pokemonDeletedFromFavs == true {
-                removeAllSubviews(sV: stackView)
-                setup()
-                realmManager.pokemonDeletedFromFavs = false
+            if realmManager.pokemonDeletedFromFavs != "" {
+                removeSubview(pokemonName: realmManager.pokemonDeletedFromFavs)
+                realmManager.pokemonDeletedFromFavs = ""
             }
         }
     }
@@ -78,15 +106,18 @@ class Preferiti: UIViewController{
     
     // da testare
     func removeSubview(pokemonName: String) {
-        print("buttonList dentro removeSub = \(buttonList)")
+        print("buttonList prima removeSub = \(buttonList)") // button list inizialmente è vuota
         buttonList.forEach { poke in
             print("pokemonName foreach = \(String(describing: poke.0.title))")
             if poke.0.title == pokemonName {
-                let viewToRemove = view.viewWithTag(poke.1)
-                printContent("view da rimuovere = \(String(describing: viewToRemove))")
+                let viewToRemove = stackView.viewWithTag(poke.1)
+                print("view da rimuovere = \(String(describing: viewToRemove))")
+                let indexOfButton = buttonList.firstIndex(where: {$0.0.title == pokemonName})
+                buttonList[indexOfButton!].0.title = "Eliminato"
                 viewToRemove?.removeFromSuperview()
             }
         }
+        print("buttonList dopo removeSub = \(buttonList)") // button list inizialmente è vuota
     }
     
     private func setup() {
