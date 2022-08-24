@@ -31,7 +31,7 @@ class PokemonDetailView: UIViewController {
         heartButton.tintColor = .red
         let configuration = UIImage.SymbolConfiguration(pointSize: 30)
         if let realmManager = realmManager {
-            if realmManager.favourites.contains(where: {$0.name == pokemonName}) {
+            if realmManager.favorites.contains(where: {$0.name == pokemonName}) {
                 heartButton.setImage(UIImage(systemName: "heart.fill", withConfiguration: configuration), for: .normal)
                 heartButton.addTarget(self, action: #selector(removeFromFavorite), for: .touchUpInside)
             } else {
@@ -44,23 +44,22 @@ class PokemonDetailView: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         print("view dismessa")
-        preferiti?.viewWillAppear(true) // TODO: non è il top chiamare questa funzione da qui, trovare un'alternativa
+        preferiti?.viewWillAppear(true)
     }
     
-    // TODO: da rimuovere il contains perchè è gia stato fatto prima
     @objc func removeFromFavorite() {
         let configuration = UIImage.SymbolConfiguration(pointSize: 30)
         addFavorite.setImage(UIImage(systemName: "heart", withConfiguration: configuration), for: .normal)
         if let realmManager = realmManager {
             if let pokemonName = pokemonName {
-                if realmManager.favourites.contains(where: {$0.name == pokemonName}){
-                    let foo = realmManager.favourites.first(where: {$0.name == pokemonName})
-                    realmManager.deletePokemonFromFavourites(id: foo!.id)
+                if realmManager.favorites.contains(where: {$0.name == pokemonName}){
+                    let foo = realmManager.favorites.first(where: {$0.name == pokemonName})
+                    realmManager.deletePokemonFromFavorites(id: foo!.id)
                     realmManager.pokemonDeletedFromFavs = pokemonName
                     print("Ho rimosso \(pokemonName) dai preferiti")
                     
                     var listaPreriti = [String]()
-                    realmManager.favourites.forEach { poke in
+                    realmManager.favorites.forEach { poke in
                         listaPreriti.append(poke.name)
                     }
                     print("lista preferiti dopo la rimozione di \(pokemonName) è \(listaPreriti)") // lista preferiti di test
@@ -72,16 +71,15 @@ class PokemonDetailView: UIViewController {
         }
     }
 
-    // TODO: da rimuovere il contains perchè è gia stato fatto prima
     @objc func addToFavorite() {
         let configuration = UIImage.SymbolConfiguration(pointSize: 30)
         addFavorite.setImage(UIImage(systemName: "heart.fill", withConfiguration: configuration), for: .normal)
         if let realmManager = realmManager {
             if let pokemonName = pokemonName {
-                if realmManager.favourites.contains(where: {$0.name == pokemonName}) {
+                if realmManager.favorites.contains(where: {$0.name == pokemonName}) {
                     print("\(pokemonName) è stato già aggiunto ai preferiti")
                 }else {
-                    realmManager.addPokemonToFavourites(name: pokemonName)
+                    realmManager.addPokemonToFavorites(name: pokemonName)
                     realmManager.newFavPokemon = pokemonName
                     print(realmManager.newFavPokemon)
                 }
@@ -167,7 +165,6 @@ class PokemonDetailView: UIViewController {
         stackViewAbilities.spacing = 10
         stackViewAbilities.axis = .vertical
         stackViewAbilities.distribution = .fill
-        print("abilities = \(abilities)")
         let numberOfAbilities = abilities.count
         let numberOfRow = Int(numberOfAbilities/2)
         var i = 0
@@ -183,7 +180,6 @@ class PokemonDetailView: UIViewController {
             abilityLabel.translatesAutoresizingMaskIntoConstraints = false
             abilityLabel.text = abilities.last
             abilityLabel = decorate(label: abilityLabel)
-            print(abilityLabel)
             stackViewAbilities.addArrangedSubview(abilityLabel)
         }
         stackView.addArrangedSubview(stackViewAbilities)

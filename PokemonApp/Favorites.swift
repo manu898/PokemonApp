@@ -9,7 +9,7 @@ import UIKit
 import Foundation
 
 class Preferiti: UIViewController{
-    
+    //TODO: modificare Preferiti in Favorite
     var realmManager: RealmManager?
     var buttonList: [(PokemonButton,Int)] = []
     var numOfDeletedButton: Int = 0
@@ -104,9 +104,8 @@ class Preferiti: UIViewController{
         buttonList.removeAll()
     }
     
-    // da testare
     func removeSubview(pokemonName: String) {
-        print("buttonList prima removeSub = \(buttonList)") // button list inizialmente è vuota
+        print("buttonList prima removeSub = \(buttonList)")
         buttonList.forEach { poke in
             print("pokemonName foreach = \(String(describing: poke.0.title))")
             if poke.0.title == pokemonName {
@@ -117,15 +116,13 @@ class Preferiti: UIViewController{
                 viewToRemove?.removeFromSuperview()
             }
         }
-        print("buttonList dopo removeSub = \(buttonList)") // button list inizialmente è vuota
+        print("buttonList dopo removeSub = \(buttonList)")
     }
     
     private func setup() {
         if let realmManager = realmManager {
-            for (n,poke) in realmManager.favourites.enumerated(){
-                //print("controllo se posso aggiungere \(poke.name) e n = \(n)")
+            for (n,poke) in realmManager.favorites.enumerated(){
                 if !buttonList.contains(where: {$0.0.title == poke.name}) {
-                    //print("button list non contiene \(poke.name) e n = \(n)")
                     let imageURL = APICaller.shared.getPokemonImageURL(name: poke.name)
                     let imageView = APICaller.shared.getPokemonImage(url: imageURL)
                     let button = PokemonButton(title: poke.name, imageView: imageView)
@@ -135,8 +132,6 @@ class Preferiti: UIViewController{
                     buttonList.append((button,btn.tag))
                     btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
                     stackView.addArrangedSubview(btn)
-                } else {
-                    //print("button list contiene \(poke.name) e n = \(n)")
                 }
             }
         }

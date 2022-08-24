@@ -136,42 +136,6 @@ class PokemonButton: UIView{
         button.setTitleColor(.black, for: .normal)
         return button
     }()
-    
-//    lazy var button2: UIButton = {
-//        let button = UIButton()
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        button.heightAnchor.constraint(equalToConstant: 200).isActive = true
-//        button.layer.cornerRadius = 10
-//        button.layer.borderWidth = 1
-//        button.layer.borderColor = UIColor.black.cgColor
-//
-//        let image = imageView?.image
-//        let targetSize = CGSize(width: 150, height: 150)
-//
-//        let scaledImage = image?.scalePreservingAspectRatio(
-//            targetSize: targetSize
-//        )
-//        let stackView = UIStackView()
-//        stackView.axis = .vertical
-//        stackView.spacing = 0
-//        stackView.distribution = UIStackView.Distribution.fill
-//        stackView.translatesAutoresizingMaskIntoConstraints = false
-//        stackView.backgroundColor = .red
-//        stackView.heightAnchor.constraint(equalToConstant: 200).isActive = true
-//        stackView.center = button.center
-//        stackView.centerXAnchor.constraint(equalTo: button.centerXAnchor).isActive = true
-//        stackView.centerYAnchor.constraint(equalTo: button.centerYAnchor).isActive = true
-//
-//        let titleLabel = UILabel()
-//        titleLabel.text = title
-//        titleLabel.textColor = .black
-//        titleLabel.font = UIFont.boldSystemFont(ofSize: 20.0)
-//
-//        stackView.addArrangedSubview(scaledImage!)
-//        stackView.addArrangedSubview(titleLabel)
-//        button.addSubview(stackView)
-//        return button
-//    }()
 }
 
 

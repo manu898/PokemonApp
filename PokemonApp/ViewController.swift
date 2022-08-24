@@ -33,13 +33,12 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         tabBar.tintColor = .label
         UINavigationBar.appearance().prefersLargeTitles = true
         viewControllers = [pokemon,preferiti]
+        self.delegate = self
         
-        realmManager.favourites.forEach { poke in
+        realmManager.favorites.forEach { poke in
             listaPreferiti.append(poke.name)
         }
         print("lista preferiti iniziale = \(listaPreferiti)") // da rimuovere questa lista preferiti
-        
-        self.delegate = self
     }
     
     fileprivate func generateNavController(vc: UIViewController, title: String) -> UINavigationController{
@@ -49,9 +48,9 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         return navController
     }
     
-    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        print("Selected \(viewController.title!)")
-    }
+//    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+//        print("Selected \(viewController.title!)")
+//    }
 
 }
 
