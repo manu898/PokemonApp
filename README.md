@@ -21,15 +21,18 @@ L'applicazione presenta 3 schermate:
 ## Struttura del progetto
 
 ### ViewController.swift
-Presenta una classe ViewController che è una sottoclasse di UITabBarController e conforme al protocollo UITabBarControllerDelegate.
+Presenta la classe ViewController che è una sottoclasse di UITabBarController e conforme al protocollo UITabBarControllerDelegate.
 In questa classe viene creato un oggetto della classe PokemonList dichiarata nel file PokemonList.swift e un oggetto della classe Favorites dichiarata
 nel file Favorites.swift. Questi due oggetti una volta creati vengono passati alla funzione generateNavController per la generazione di oggetti
 di tipo UINavigationController per poi essere assegnati come viewControllers della classe ViewController.
 
 ### PokemonList.swift
+Presenta la classe PokemonList che è una sottoclasse di UIViewController e la classe PokemonButton che è una sottoclasse di UIView.
+Nella classe PokemonList viene creato un oggetto della classe UIScrollView nel quale 
 
 
 ### Favorites.swift
+Presenta la classe Favorite che è una sottoclasse di UIViewController.
 
 
 ### PokemonDetailView.swift
@@ -44,8 +47,9 @@ di tipo UINavigationController per poi essere assegnati come viewControllers del
 ### FavoritePokemon.swift
 
 
+
 ### Useful.swift
-Presenta una estensinsione della classe UIImage 
+Presenta una estensione della classe UIImage nella quale viene dichiarata la funzione scalePreservingAspectRatio che dato un oggetto della classe CGSize restituisce un oggetto della classe UIImage delle dimensioni specificate nell'oggetto passato in input alla funzione.
 
 
 
