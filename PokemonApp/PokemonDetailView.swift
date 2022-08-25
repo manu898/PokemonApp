@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class PokemonDetailView: UIViewController {
-    
+    // TODO: controllare le funzioni decorate e mettere in Useful se servono in più file
     var realmManager: RealmManager?
     var pokemonName: String?
     var stats: [Stat] = []
@@ -281,4 +281,3 @@ class AbilityRow: UIView {
         return label
     }
 }
-

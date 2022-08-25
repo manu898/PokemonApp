@@ -12,7 +12,6 @@ class Preferiti: UIViewController{
     //TODO: modificare Preferiti in Favorite
     var realmManager: RealmManager?
     var buttonList: [(PokemonButton,Int)] = []
-    var numOfDeletedButton: Int = 0
     
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -42,58 +41,32 @@ class Preferiti: UIViewController{
         setupLayout()
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        if let realmManager = realmManager {
-//            let newFavPokemon = realmManager.newFavPokemon
-//            if newFavPokemon != "" {
-//                if !buttonList.contains(where: {$0.0.title == newFavPokemon}) {
-//                    realmManager.newFavPokemon = ""
-//                    let imageURL = APICaller.shared.getPokemonImageURL(name: newFavPokemon)
-//                    let imageView = APICaller.shared.getPokemonImage(url: imageURL)
-//                    print("realizzo il bottone per \(newFavPokemon)")
-//                    let button = PokemonButton(title: newFavPokemon, imageView: imageView)
-//                    let btn = button.button
-//                    let numOfButton = buttonList.count
-//                    btn.tag = numOfButton + 200
-//                    buttonList.append((button,btn.tag))
-//                    btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
-//                    stackView.addArrangedSubview(btn)
-//                    print("button list dopo dell'operazione = \(buttonList)")
-//
-//                }
-//            }
-//            if realmManager.pokemonDeletedFromFavs == true {
-//                removeAllSubviews(sV: stackView)
-//                setup()
-//                realmManager.pokemonDeletedFromFavs = false
-//            }
-//        }
-//    }
-    
     override func viewWillAppear(_ animated: Bool) {
         if let realmManager = realmManager {
             let newFavPokemon = realmManager.newFavPokemon
             if newFavPokemon != "" {
+                print("entro dentro perchè newFav è qualcosa")
                 if !buttonList.contains(where: {$0.0.title == newFavPokemon}) {
                     realmManager.newFavPokemon = ""
                     let imageURL = APICaller.shared.getPokemonImageURL(name: newFavPokemon)
                     let imageView = APICaller.shared.getPokemonImage(url: imageURL)
-                    print("realizzo il bottone per \(newFavPokemon)")
                     let button = PokemonButton(title: newFavPokemon, imageView: imageView)
                     let btn = button.button
-                    let numOfButton = buttonList.count
+                    let numOfButton = buttonList.count // togliere sta costante
                     btn.tag = numOfButton + 200
+                    print("creo bottone per \(newFavPokemon) con tag \(btn.tag)")
                     buttonList.append((button,btn.tag))
                     btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
                     stackView.addArrangedSubview(btn)
-                    print("button list dopo dell'operazione = \(buttonList)")
                     
                 }
             }
             if realmManager.pokemonDeletedFromFavs != "" {
+                print("entro dentro perchè deletedFav è qualcosa")
                 removeSubview(pokemonName: realmManager.pokemonDeletedFromFavs)
                 realmManager.pokemonDeletedFromFavs = ""
             }
+            print("buttonList dopo viewWillAppear = \(buttonList)")
         }
     }
     
@@ -105,43 +78,44 @@ class Preferiti: UIViewController{
     }
     
     func removeSubview(pokemonName: String) {
-        print("buttonList prima removeSub = \(buttonList)")
         buttonList.forEach { poke in
-            print("pokemonName foreach = \(String(describing: poke.0.title))")
             if poke.0.title == pokemonName {
                 let viewToRemove = stackView.viewWithTag(poke.1)
-                print("view da rimuovere = \(String(describing: viewToRemove))")
                 let indexOfButton = buttonList.firstIndex(where: {$0.0.title == pokemonName})
                 buttonList[indexOfButton!].0.title = "Eliminato"
+                print("buttonList dopo la removeSubview \(buttonList)")
                 viewToRemove?.removeFromSuperview()
             }
         }
-        print("buttonList dopo removeSub = \(buttonList)")
     }
     
     private func setup() {
         if let realmManager = realmManager {
             for (n,poke) in realmManager.favorites.enumerated(){
+                print("n = \(n) e pokemon = \(poke)")
                 if !buttonList.contains(where: {$0.0.title == poke.name}) {
                     let imageURL = APICaller.shared.getPokemonImageURL(name: poke.name)
                     let imageView = APICaller.shared.getPokemonImage(url: imageURL)
                     let button = PokemonButton(title: poke.name, imageView: imageView)
                     let btn = button.button
-                    btn.tag = n+200
-                    print("tag \(btn.tag) per \(poke.name)")
+                    btn.tag = 200 + buttonList.count // aggiunto buttonlist.count e rimosso n
+                    print("creo il bottone per \(poke.name) con tag \(btn.tag)")
                     buttonList.append((button,btn.tag))
                     btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
                     stackView.addArrangedSubview(btn)
                 }
             }
         }
-        print("sto in setup e buttonListPreriti = \(buttonList)")
+        print("buttonList dopo setup = \(buttonList)")
     }
     
     @objc
     func tap(sender: UIButton){
-        let pokemonName = buttonList[sender.tag-200].0.title
-        print("pokemonName = \(pokemonName!)")
+        print("buttonList \(buttonList) ") // ha rimosso il bottone pokemon aggiunto e rimosso dalla buttonList, perchè ?
+        let indexPokemon = buttonList.firstIndex(where: {$0.1 == sender.tag})
+        print("index = \(indexPokemon)")
+        let pokemonName = buttonList[indexPokemon!].0.title
+        //let pokemonName = buttonList[sender.tag-200].0.title // da correggere indice
         let result = APICaller.shared.getPokemon(name: pokemonName!)
         let imageURL = APICaller.shared.getPokemonImageURL(name: pokemonName!)
         let imageView = APICaller.shared.getPokemonImage(url: imageURL)

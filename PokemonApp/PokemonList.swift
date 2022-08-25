@@ -102,7 +102,7 @@ class PokemonList: UIViewController {
     }
 }
 
-
+// TODO: questa classe dove va messa ??? In Useful ?
 class PokemonButton: UIView{
     var title: String?
     var imageView: UIImageView?
