@@ -55,7 +55,6 @@ class Favorites: UIViewController{
                     buttonList.append((button,btn.tag))
                     btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
                     stackView.addArrangedSubview(btn)
-                    
                 }
             }
             if realmManager.pokemonDeletedFromFavs != "" {

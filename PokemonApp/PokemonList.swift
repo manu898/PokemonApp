@@ -28,7 +28,6 @@ class PokemonList: UIViewController {
         stackView.distribution = UIStackView.Distribution.equalSpacing
         stackView.spacing = 20
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        
         return stackView
     }()
     
@@ -50,7 +49,6 @@ class PokemonList: UIViewController {
         scrollView.addSubview(contentView)
         contentView.addSubview(stackView)
         pokemonList = APICaller.shared.getPokemonList(numPokemon: 50)
-
         if let pokemonList = pokemonList {
             for (n,poke) in pokemonList.enumerated(){
                 let imageURL = APICaller.shared.getPokemonImageURL(name: poke.name)
@@ -123,7 +121,6 @@ class PokemonButton: UIView{
         button.layer.cornerRadius = 10
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.black.cgColor
-
         let image = imageView?.image
         let targetSize = CGSize(width: 150, height: 150)
 

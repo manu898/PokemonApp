@@ -14,7 +14,6 @@ class PokemonDetailView: UIViewController {
     var stats: [Stat] = []
     var abilities: [String] = []
     var img: UIImageView = UIImageView()
-    
     var favorites: UIViewController?
     
     lazy var pokemonNameLabel: UILabel = {
@@ -194,14 +193,12 @@ class StatRow: UIView {
         stackView.axis = .horizontal
         stackView.distribution = UIStackView.Distribution.equalSpacing
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        
         var nameLabel = UILabel()
         var valueLabel = UILabel()
         nameLabel.text = name
         valueLabel.text = value
         nameLabel = decorate(label: nameLabel)
         valueLabel = decorate(label: valueLabel)
-        
         stackView.addArrangedSubview(nameLabel)
         stackView.addArrangedSubview(valueLabel)
         return stackView
@@ -219,7 +216,6 @@ class StatRow: UIView {
 class AbilityRow: UIView {
     var ability1: String
     var ability2: String
-    
     
     init(ability1: String, ability2: String){
         self.ability1 = ability1
