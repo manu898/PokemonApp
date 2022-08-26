@@ -35,12 +35,6 @@ class RealmManager: ObservableObject {
                     let newPokemon = FavouritePokemon(value: ["name": name])
                     localRealm.add(newPokemon)
                     getFavorites()
-                    print("Aggiunto \(name) alla lista dei preferiti")
-                    var listaPreferiti = [String]()
-                    favorites.forEach { poke in
-                        listaPreferiti.append(poke.name)
-                    }
-                    print("Lista preferiti dopo l'aggiunta di \(name) è \(listaPreferiti)")
                 }
             } catch {
                 print("Error in add pokemon ro realm: \(error)")
@@ -50,7 +44,7 @@ class RealmManager: ObservableObject {
     
     func getFavorites(){
         if let localRealm = localRealm {
-            let allFavourites = localRealm.objects(FavouritePokemon.self) // prende la lista dei preferiti ma la riordina alfabeticamente 
+            let allFavourites = localRealm.objects(FavouritePokemon.self)
             favorites = []
             allFavourites.forEach { favs in
                 favorites.append(favs)

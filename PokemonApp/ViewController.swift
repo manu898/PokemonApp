@@ -12,20 +12,17 @@ import SwiftyJSON
 class ViewController: UITabBarController, UITabBarControllerDelegate {
     
     var realmManager: RealmManager = RealmManager()
-    
-    var preferiti: UIViewController?
-    
-    var listaPreferiti: [String] = [String]()
+    var favorites: UIViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         let pokemonList = PokemonList()
-        let favoriteList = Preferiti()
+        let favoriteList = Favorites()
         pokemonList.realmManager = realmManager
         favoriteList.realmManager = realmManager
-        preferiti = favoriteList
-        pokemonList.preferiti = preferiti
+        favorites = favoriteList
+        pokemonList.favorites = favorites
         let pokemon = generateNavController(vc: pokemonList, title: "Pokemon")
         let preferiti = generateNavController(vc: favoriteList, title: "Preferiti")
         pokemon.tabBarItem.image = UIImage(systemName: "magnifyingglass")

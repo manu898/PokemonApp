@@ -14,7 +14,7 @@ class PokemonList: UIViewController {
     var realmManager: RealmManager?
     var pokemonList: [Pokemon]?
     var buttonList: [PokemonButton] = [PokemonButton]()
-    var preferiti: UIViewController?
+    var favorites: UIViewController?
     
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -76,7 +76,7 @@ class PokemonList: UIViewController {
         let controller = PokemonDetailView()
         controller.img = imageView
         controller.pokemonName = pokemonName
-        controller.preferiti = preferiti
+        controller.favorites = favorites
         controller.realmManager = realmManager
         controller.stats = stats
         controller.abilities = abilities
@@ -102,7 +102,6 @@ class PokemonList: UIViewController {
     }
 }
 
-// TODO: questa classe dove va messa ??? In Useful ?
 class PokemonButton: UIView{
     var title: String?
     var imageView: UIImageView?
@@ -119,7 +118,7 @@ class PokemonButton: UIView{
     
     lazy var button: UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false // stava a true ma sembra che a false non cambia nnt
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 200).isActive = true
         button.layer.cornerRadius = 10
         button.layer.borderWidth = 1

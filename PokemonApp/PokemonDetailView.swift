@@ -9,14 +9,13 @@ import Foundation
 import UIKit
 
 class PokemonDetailView: UIViewController {
-    // TODO: controllare le funzioni decorate e mettere in Useful se servono in più file
     var realmManager: RealmManager?
     var pokemonName: String?
     var stats: [Stat] = []
     var abilities: [String] = []
     var img: UIImageView = UIImageView()
     
-    var preferiti: UIViewController?
+    var favorites: UIViewController?
     
     lazy var pokemonNameLabel: UILabel = {
         let pokemonNameLabel = UILabel()
@@ -43,8 +42,7 @@ class PokemonDetailView: UIViewController {
     }()
     
     override func viewDidDisappear(_ animated: Bool) {
-        print("view dismessa")
-        preferiti?.viewWillAppear(true)
+        favorites?.viewWillAppear(true)
     }
     
     @objc func removeFromFavorite() {
@@ -56,16 +54,6 @@ class PokemonDetailView: UIViewController {
                     let foo = realmManager.favorites.first(where: {$0.name == pokemonName})
                     realmManager.deletePokemonFromFavorites(id: foo!.id)
                     realmManager.pokemonDeletedFromFavs = pokemonName
-                    print("Ho rimosso \(pokemonName) dai preferiti")
-                    
-                    var listaPreriti = [String]()
-                    realmManager.favorites.forEach { poke in
-                        listaPreriti.append(poke.name)
-                    }
-                    print("lista preferiti dopo la rimozione di \(pokemonName) è \(listaPreriti)") // lista preferiti di test
-                    
-                } else {
-                    print("\(pokemonName) è già stato rimosso dai preferiti")
                 }
             }
         }
@@ -76,12 +64,9 @@ class PokemonDetailView: UIViewController {
         addFavorite.setImage(UIImage(systemName: "heart.fill", withConfiguration: configuration), for: .normal)
         if let realmManager = realmManager {
             if let pokemonName = pokemonName {
-                if realmManager.favorites.contains(where: {$0.name == pokemonName}) {
-                    print("\(pokemonName) è stato già aggiunto ai preferiti")
-                }else {
+                if !realmManager.favorites.contains(where: {$0.name == pokemonName}) {
                     realmManager.addPokemonToFavorites(name: pokemonName)
                     realmManager.newFavPokemon = pokemonName
-                    print(realmManager.newFavPokemon)
                 }
             }
         }
@@ -135,9 +120,6 @@ class PokemonDetailView: UIViewController {
         stackView.addArrangedSubview(addFavorite)
         img.translatesAutoresizingMaskIntoConstraints = false
         img.contentMode = .scaleAspectFit
-//        img.widthAnchor.constraint(equalToConstant: 200).isActive = true
-//        img.heightAnchor.constraint(equalToConstant: 200).isActive = true
-//        img.autoresizesSubviews = true
         stackView.addArrangedSubview(img)
         stackView.addArrangedSubview(pokemonNameLabel)
         abilitiesView(abilities: abilities)

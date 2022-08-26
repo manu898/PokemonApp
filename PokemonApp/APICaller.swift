@@ -44,10 +44,8 @@ class APICaller{
     
     func getPokemon(id: Int) -> ([String],[Stat]){
         let urlData = urlString + "\(id)/"
-        //print("la url è = \(urlData)")
         if let url = URL(string: urlData){
             if let data = try? Data(contentsOf: url){
-                //print("presi i dati dalla URL")
                 let abilities = getAbilities(data: data)
                 let stats = getStats(data: data)
                 return (abilities,stats)
@@ -58,10 +56,8 @@ class APICaller{
     
     func getPokemon(name: String) -> ([String],[Stat]){
         let urlData = urlString + "\(name)/"
-        //print("la url è = \(urlData)")
         if let url = URL(string: urlData){
             if let data = try? Data(contentsOf: url){
-                //print("presi i dati dalla URL")
                 let abilities = getAbilities(data: data)
                 let stats = getStats(data: data)
                 return (abilities,stats)
@@ -77,7 +73,6 @@ class APICaller{
                 let ability = abilities["ability"]["name"].stringValue
                 abilitiesList.append(ability)
             }
-            //print("abilitiesList = \(abilitiesList)")
             return abilitiesList
         }
         return []
@@ -95,7 +90,7 @@ class APICaller{
         }
         return []
     }
-        
+    
     func getPokemonImageURL(name: String) -> String {
         let urlData = urlString + "\(name)/"
         if let url = URL(string: urlData) {
@@ -106,16 +101,13 @@ class APICaller{
                 }
             }
         }
-        return "niente immagine"
+        return ""
     }
     
-    // l'ID lo prendo dalla lista
     func getPokemonImage(url: String) -> UIImageView{
         let imageView = UIImageView()
-        // Fetch Image Data
         if let url = URL(string: url) {
             if let data = try? Data(contentsOf: url) {
-                // Create Image and Update Image View
                 imageView.image = UIImage(data: data)
             }
             return imageView
