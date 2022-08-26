@@ -47,6 +47,7 @@ Presenta le seguenti classi:
 * La classe AbilityRow che è una sottoclasse di UIView;
 * La classe StatRow che è una sottoclasse di UIView.
 La classe PokemonDetailView si occupa della creazione di un oggetto della classe UIScrollView che contiene un oggetto della classe UIStackView. Un oggetto della classe PokemonDetailView viene creato ogni volta che l'utente seleziona un determinato pokemon della lista dei pokemon recuperata tramite la funzione **getPokemonList(numPokemon: Int)** della classe APICaller richiamata nella classe **PokemonList** oppure quando si seleziona un pokemon presente nella schermata dei preferiti data dalla classe **Favorites**.
+
 La UIStackView contiene:
 * un bottone per aggiungere o rimuovere il pokemon selezionato dalla lista dei preferiti;
 * L'immagine in formato png legata al pokemon selezionato;
