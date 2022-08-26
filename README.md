@@ -28,7 +28,8 @@ di tipo UINavigationController per poi essere assegnati come viewControllers del
 
 ### PokemonList.swift
 Presenta la classe PokemonList che è una sottoclasse di UIViewController e la classe PokemonButton che è una sottoclasse di UIView.
-Nella classe PokemonList viene creato un oggetto della classe UIScrollView nel quale 
+Nella classe PokemonList viene creato un oggetto della classe UIScrollView nel quale viene inserito un oggetto di tipo UIView che a sua volta contiene
+un oggetto della classe UIStackView. Quest'ultima sarà il contenitore dei bottoni relativi ad ogni pokemon richiesto tramite la richiesta HTTP fatta utilizzando la funzione getPokemonList(numPokemon: Int) della classe APICaller. I bottoni presenti nella view associata a questa classe vengono realizzati tramite la classe PokemonButton presente sempre in questo file.
 
 
 ### Favorites.swift
@@ -43,6 +44,7 @@ Presenta le seguenti classi:
 
 
 
+
 ### RealmManager.swift
 Presenta la classe RealmManager che è conforme al protocollo ObservableObject.
 
@@ -50,9 +52,9 @@ Presenta la classe RealmManager che è conforme al protocollo ObservableObject.
 ### APICaller.swift
 Presenta la classe APICaller, la struct Pokemon per ogni pokemon da rappresentare nell'applicazione, la struct Pokemons per la risposta alla richiesta della lista dei pokemon al database e la struct Stat per le statistiche di ogni Pokemon ricevuto dal database.
 Nella classe APICaller sono implementate le seguenti funzioni:
-* ''' swift getPokemonList(numPokemon: Int) ''' che effettua una richiesta HTTP alla url "https://pokeapi.co/api/v2/pokemon/" e restituisce una lista di oggetti di tipo Pokemon lunga quanto il valore intero passato in input alla funzione. 
-* ''' swift getPokemon(name: String) ''' che effettua una richiesta HTTP alla url "https://pokeapi.co/api/v2/pokemon/{name}" e restituisce le statistiche e le abilità del pokemon relativo al valore di tipo String passato in input alla funzione;
-* ''' swift getPokemon(id: Int) ''' che effettua una richiesta HTTP alla url "https://pokeapi.co/api/v2/pokemon/{id}" e restituisce le statistiche e le abilità del pokemon relativo al valore di tipo Int passato in input alla funzione;
+* getPokemonList(numPokemon: Int) che effettua una richiesta HTTP alla url "https://pokeapi.co/api/v2/pokemon/" e restituisce una lista di oggetti di tipo Pokemon lunga quanto il valore intero passato in input alla funzione. 
+* getPokemon(name: String) che effettua una richiesta HTTP alla url "https://pokeapi.co/api/v2/pokemon/{name}" e restituisce le statistiche e le abilità del pokemon relativo al valore di tipo String passato in input alla funzione;
+* getPokemon(id: Int) che effettua una richiesta HTTP alla url "https://pokeapi.co/api/v2/pokemon/{id}" e restituisce le statistiche e le abilità del pokemon relativo al valore di tipo Int passato in input alla funzione;
 * getAbilities(data: Data) che prende il contenuto della risposta alla richiesta HTTP fatta in getPokemon(name: String) e restituisce le statistiche associate al pokemon;
 * getStats(data: Data) che prende il contenuto della risposta alla richiesta HTTP fatta in getPokemon(name: String) e restituisce le abilità associate al pokemon;
 * getPokemonImageURL(name: String) che restituisce la URL dove richiedere l'immagine in formato png del pokemon associato alla variabile di tipo stringa passata in input alla funzione;
