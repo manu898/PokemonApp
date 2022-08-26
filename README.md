@@ -15,7 +15,7 @@ Per una corretta esecuzione è neccessario installare i framework sopracitati.
 ## Utilizzo
 L'applicazione presenta 3 schermate:
 * una schermata che mostra la lista dei pokemon messi a disposizione;
-* una schermata che mostra la lista dei pokemon selezionari come preferiti dall'utente.
+* una schermata che mostra la lista dei pokemon selezionari come preferiti dall'utente;
 * una schermata di dettaglio che mostra le statistiche e le abilità del pokemon selezionato tramite il relativo bottone presente nella prima schermata.
 
 ## Struttura del progetto
@@ -36,15 +36,23 @@ Presenta la classe Favorite che è una sottoclasse di UIViewController.
 
 
 ### PokemonDetailView.swift
+Presenta le seguenti classi:
+* La classe PokemonDetailView che è una sottoclasse di UIViewController;
+* La classe AbilityRow che è una sottoclasse di UIView;
+* La classe StatRow che è una sottoclasse di UIView.
+
 
 
 ### RealmManager.swift
+Presenta la classe RealmManager che è conforme al protocollo ObservableObject.
 
 
 ### APICaller.swift
+Presenta la classe APICaller, la struct Pokemon e la struct Pokemons.
 
 
 ### FavoritePokemon.swift
+Presenta la classe FavoritePokemon che è conforme al protocollo ObjectKeyIdentifiable
 
 
 
