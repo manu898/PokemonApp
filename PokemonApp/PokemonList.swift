@@ -48,37 +48,50 @@ class PokemonList: UIViewController {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(stackView)
-        pokemonList = APICaller.shared.getPokemonList(numPokemon: 50)
-        if let pokemonList = pokemonList {
-            for (n,poke) in pokemonList.enumerated(){
-                let imageURL = APICaller.shared.getPokemonImageURL(name: poke.name)
-                let imageView = APICaller.shared.getPokemonImage(url: imageURL)
-                let button = PokemonButton(title: poke.name, imageView: imageView)
-                buttonList.append(button)
-                let btn = button.button
-                btn.tag = n+1
-                btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
-                stackView.addArrangedSubview(btn)
+        Task {
+            do {
+                pokemonList = try await APICaller().getPokemonList(numPokemon: 50)
+                if let pokemonList = pokemonList {
+                    for (n,poke) in pokemonList.enumerated(){
+                        let imageURL = try await APICaller.shared.getPokemonImageURL(name: poke.name)
+                        let imageView = try await APICaller.shared.getPokemonImage(url: imageURL)
+                        let button = PokemonButton(title: poke.name, imageView: imageView)
+                        buttonList.append(button)
+                        let btn = button.button
+                        btn.tag = n+1
+                        btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
+                        stackView.addArrangedSubview(btn)
+                    }
+                }
+            } catch {
+                print("Errore nel recupero della lista dei pokemon \(error)")
             }
+
         }
     }
     
     @objc
     func tap(sender: UIButton){
-        let pokemonName = buttonList[sender.tag-1].title
-        let imageURL = APICaller.shared.getPokemonImageURL(name: pokemonName!)
-        let imageView = APICaller.shared.getPokemonImage(url: imageURL)
-        let result = APICaller.shared.getPokemon(id: sender.tag)
-        let abilities = result.0
-        let stats = result.1
-        let controller = PokemonDetailView()
-        controller.img = imageView
-        controller.pokemonName = pokemonName
-        controller.favorites = favorites
-        controller.realmManager = realmManager
-        controller.stats = stats
-        controller.abilities = abilities
-        present(controller, animated: true, completion: nil)
+        Task {
+            do {
+                let pokemonName = buttonList[sender.tag-1].title
+                let imageURL = try await APICaller.shared.getPokemonImageURL(name: pokemonName!)
+                let imageView = try await APICaller.shared.getPokemonImage(url: imageURL)
+                let result = try await APICaller.shared.getPokemon(id: sender.tag)
+                let abilities = result.0
+                let stats = result.1
+                let controller = PokemonDetailView()
+                controller.img = imageView
+                controller.pokemonName = pokemonName
+                controller.favorites = favorites
+                controller.realmManager = realmManager
+                controller.stats = stats
+                controller.abilities = abilities
+                present(controller, animated: true, completion: nil)
+            } catch {
+                print("Error in tap \(error)")
+            }
+        }
     }
     
     private func setupLayout() {

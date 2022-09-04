@@ -28,42 +28,52 @@ class APICaller{
     var pokemons = [Pokemon]()
     var urlString = "https://pokeapi.co/api/v2/pokemon/"
     
-    func getPokemonList(numPokemon: Int) -> [Pokemon]{
+    func getPokemonList(numPokemon: Int) async throws -> [Pokemon] {
         let urlData = urlString + "?limit=\(numPokemon)"
-        if let url = URL(string: urlData){
-            if let data = try? Data(contentsOf: url){
-                if let jsonPokemonList = try? JSONDecoder().decode(Pokemons.self, from: data) {
-                    pokemons = jsonPokemonList.results
-                    return pokemons
-                }
-            }
+        guard let url = URL(string: urlData) else {
+            fatalError("Missing URL")
         }
-        return []
+        let urlRequest = URLRequest(url: url)
+        
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            fatalError("Error fetching pokemon list")}
+        
+        guard let decodedData = try? JSONDecoder().decode(Pokemons.self, from: data) else {
+            fatalError("The server response wasn't recognized ")
+        }
+        return decodedData.results
     }
     
-    
-    func getPokemon(id: Int) -> ([String],[Stat]){
+    func getPokemon(id: Int) async throws -> ([String],[Stat]){
         let urlData = urlString + "\(id)/"
-        if let url = URL(string: urlData){
-            if let data = try? Data(contentsOf: url){
-                let abilities = getAbilities(data: data)
-                let stats = getStats(data: data)
-                return (abilities,stats)
-            }
+        guard let url = URL(string: urlData) else {
+            fatalError("Missing URL")
         }
-        return ([],[])
+        let urlRequest = URLRequest(url: url)
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            fatalError("Error fetching pokemon")
+        }
+        let abilities = getAbilities(data: data)
+        let stats = getStats(data: data)
+        return (abilities,stats)
     }
     
-    func getPokemon(name: String) -> ([String],[Stat]){
+    func getPokemon(name: String) async throws -> ([String],[Stat]){
         let urlData = urlString + "\(name)/"
-        if let url = URL(string: urlData){
-            if let data = try? Data(contentsOf: url){
-                let abilities = getAbilities(data: data)
-                let stats = getStats(data: data)
-                return (abilities,stats)
-            }
+        guard let url = URL(string: urlData) else {
+            fatalError("Missing URL")
         }
-        return ([],[])
+        let urlRequest = URLRequest(url: url)
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            fatalError("Error fetching pokemon")
+        }
+        let abilities = getAbilities(data: data)
+        let stats = getStats(data: data)
+        return (abilities,stats)
     }
     
     func getAbilities(data: Data) -> [String] {
@@ -91,26 +101,35 @@ class APICaller{
         return []
     }
     
-    func getPokemonImageURL(name: String) -> String {
+    func getPokemonImageURL(name: String) async throws -> String {
         let urlData = urlString + "\(name)/"
-        if let url = URL(string: urlData) {
-            if let data = try? Data(contentsOf: url) {
-                if let json = try? JSON(data: data) {
-                    let imageURL = json["sprites"]["front_default"].stringValue
-                    return imageURL
-                }
-            }
+        guard let url = URL(string: urlData) else {
+            fatalError("Missing URL")
         }
-        return ""
+        let urlRequest = URLRequest(url: url)
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            fatalError("Error fetching pokemon image URL")
+        }
+        guard let json = try? JSON(data: data) else {
+            fatalError("The server response wasn't recognized")
+        }
+        let imageURL = json["sprites"]["front_default"].stringValue
+        return imageURL
     }
     
-    func getPokemonImage(url: String) -> UIImageView{
+    func getPokemonImage(url: String) async throws -> UIImageView{
         let imageView = UIImageView()
-        if let url = URL(string: url) {
-            if let data = try? Data(contentsOf: url) {
-                imageView.image = UIImage(data: data)
-            }
-            return imageView
+        guard let url = URL(string: url) else {
+            fatalError("Missing URL")
+        }
+        let urlRequest = URLRequest(url: url)
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            fatalError("Error fetching pokemon image URL")
+        }
+        DispatchQueue.main.async {
+            imageView.image = UIImage(data: data)
         }
         return imageView
     }

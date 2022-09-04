@@ -46,15 +46,21 @@ class Favorites: UIViewController{
             if newFavPokemon != "" {
                 if !buttonList.contains(where: {$0.0.title == newFavPokemon}) {
                     realmManager.newFavPokemon = ""
-                    let imageURL = APICaller.shared.getPokemonImageURL(name: newFavPokemon)
-                    let imageView = APICaller.shared.getPokemonImage(url: imageURL)
-                    let button = PokemonButton(title: newFavPokemon, imageView: imageView)
-                    let btn = button.button
-                    let numOfButton = buttonList.count
-                    btn.tag = numOfButton + 200
-                    buttonList.append((button,btn.tag))
-                    btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
-                    stackView.addArrangedSubview(btn)
+                    Task {
+                        do {
+                            let imageURL = try await APICaller.shared.getPokemonImageURL(name: newFavPokemon)
+                            let imageView = try await APICaller.shared.getPokemonImage(url: imageURL)
+                            let button = PokemonButton(title: newFavPokemon, imageView: imageView)
+                            let btn = button.button
+                            let numOfButton = buttonList.count
+                            btn.tag = numOfButton + 200
+                            buttonList.append((button,btn.tag))
+                            btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
+                            stackView.addArrangedSubview(btn)
+                        } catch {
+                            print("Error in get pokemon \(error)")
+                        }
+                    }
                 }
             }
             if realmManager.pokemonDeletedFromFavs != "" {
@@ -84,16 +90,22 @@ class Favorites: UIViewController{
     
     private func setup() {
         if let realmManager = realmManager {
-            for (n,poke) in realmManager.favorites.enumerated(){
-                if !buttonList.contains(where: {$0.0.title == poke.name}) {
-                    let imageURL = APICaller.shared.getPokemonImageURL(name: poke.name)
-                    let imageView = APICaller.shared.getPokemonImage(url: imageURL)
-                    let button = PokemonButton(title: poke.name, imageView: imageView)
-                    let btn = button.button
-                    btn.tag = 200 + buttonList.count
-                    buttonList.append((button,btn.tag))
-                    btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
-                    stackView.addArrangedSubview(btn)
+            Task {
+                do {
+                    for (n,poke) in realmManager.favorites.enumerated(){
+                        if !buttonList.contains(where: {$0.0.title == poke.name}) {
+                            let imageURL = try await APICaller.shared.getPokemonImageURL(name: poke.name)
+                            let imageView = try await APICaller.shared.getPokemonImage(url: imageURL)
+                            let button = PokemonButton(title: poke.name, imageView: imageView)
+                            let btn = button.button
+                            btn.tag = 200 + buttonList.count
+                            buttonList.append((button,btn.tag))
+                            btn.addTarget(self, action: #selector(tap), for: .touchUpInside)
+                            stackView.addArrangedSubview(btn)
+                        }
+                    }
+                } catch {
+                    print("Error in setup Favorites \(error)")
                 }
             }
         }
@@ -101,21 +113,27 @@ class Favorites: UIViewController{
     
     @objc
     func tap(sender: UIButton){
-        let indexPokemon = buttonList.firstIndex(where: {$0.1 == sender.tag})
-        let pokemonName = buttonList[indexPokemon!].0.title
-        let result = APICaller.shared.getPokemon(name: pokemonName!)
-        let imageURL = APICaller.shared.getPokemonImageURL(name: pokemonName!)
-        let imageView = APICaller.shared.getPokemonImage(url: imageURL)
-        let abilities = result.0
-        let stats = result.1
-        let controller = PokemonDetailView()
-        controller.img = imageView
-        controller.pokemonName = pokemonName
-        controller.favorites = self
-        controller.realmManager = realmManager
-        controller.stats = stats
-        controller.abilities = abilities
-        present(controller, animated: true, completion: nil)
+        Task {
+            do {
+                let indexPokemon = buttonList.firstIndex(where: {$0.1 == sender.tag})
+                let pokemonName = buttonList[indexPokemon!].0.title
+                let result = try await APICaller.shared.getPokemon(name: pokemonName!)
+                let imageURL = try await APICaller.shared.getPokemonImageURL(name: pokemonName!)
+                let imageView = try await APICaller.shared.getPokemonImage(url: imageURL)
+                let abilities = result.0
+                let stats = result.1
+                let controller = PokemonDetailView()
+                controller.img = imageView
+                controller.pokemonName = pokemonName
+                controller.favorites = self
+                controller.realmManager = realmManager
+                controller.stats = stats
+                controller.abilities = abilities
+                present(controller, animated: true, completion: nil)
+            } catch {
+                print("Error in tap pokeButton \(error)")
+            }
+        }
     }
     
     private func setupViews() {
